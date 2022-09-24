@@ -1,7 +1,11 @@
 package ru.mironovmike.store.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Formula;
+import ru.mironovmike.store.util.MonetaryAmount;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -29,6 +33,9 @@ public class Product {
     @NotNull
     private float weight;
 
-    @Formula("(select (p.weight * p.package_amount)  from product p where p.id = id)")
+    @Formula("(select (p.weight * p.package_amount) from product p where p.id = id)")
     private float packageWeight;
+
+    @Embedded
+    private MonetaryAmount monetaryAmount;
 }
