@@ -4,3 +4,5 @@ spring:
     password: '{cipher}550b018c837b47fc8e6162ba03ae490b7aaf0293d7616931df1d4c095440b844'
     url: jdbc:mysql://localhost:3306/db
     driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
