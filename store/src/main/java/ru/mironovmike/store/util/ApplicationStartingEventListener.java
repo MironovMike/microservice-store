@@ -29,8 +29,5 @@ public class ApplicationStartingEventListener implements ApplicationListener<Con
                 .monetaryAmount(monetaryAmount)
                 .build();
         productService.create(product);
-        // @Formula executes only on SELECT
-        product = productService.findById(product.getId());
-        log.info(product.getTitle() + " package weight: " + product.getPackageWeight());
     }
 }
