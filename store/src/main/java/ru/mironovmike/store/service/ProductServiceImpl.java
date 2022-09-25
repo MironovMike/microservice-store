@@ -39,7 +39,9 @@ public class ProductServiceImpl implements ProductService{
     public Product findById(long id, Locale locale) {
         log.info("Find by Id: " + id);
         Currency currency = localeCurrencyResolver.getCurrency(locale);
-        Product product = repository.findById(id).orElseThrow(NoSuchElementException::new);
+        Product product = repository
+                .findById(id)
+                .orElseThrow(()-> new NoSuchElementException(String.format("Product id %s not found", id)));
         @NotNull Currency productCurrency = product.getMonetaryAmount().getCurrency();
         if (!productCurrency.getCurrencyCode().equals(currency.getCurrencyCode())) {
             // TODO Request to exchange rate service to perform currency maths
