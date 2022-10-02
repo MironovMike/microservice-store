@@ -21,7 +21,7 @@ public class ApplicationStartingEventListener implements ApplicationListener<Con
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         log.info("Run ContextRefreshedEvent handler");
-        MonetaryAmount monetaryAmount = MonetaryAmount.builder().price(2.5d).currency(Currency.getInstance("RUB")).build();
+        MonetaryAmount monetaryAmount = MonetaryAmount.builder().price(150d).currency(Currency.getInstance("RUB")).build();
         Product product = Product.builder()
                 .title("Галоши")
                 .packageAmount(6)
