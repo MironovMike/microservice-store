@@ -21,6 +21,7 @@
         <module>config-server</module>
         <module>store</module>
         <module>rates</module>
+        <module>eureka</module>
     </modules>
 
     <build>
