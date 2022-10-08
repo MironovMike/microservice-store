@@ -1,6 +1,9 @@
 package ru.mironovmike.store.service;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +51,9 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     @CircuitBreaker(name = "rates", fallbackMethod = "ratesFallbackMethod")
+    @Bulkhead(name = "rates", fallbackMethod = "ratesFallbackMethod")
+    @Retry(name = "rates", fallbackMethod = "ratesFallbackMethod")
+    @RateLimiter(name = "rates", fallbackMethod = "ratesFallbackMethod")
     public Product findById(long id, Locale locale) {
         log.info(String.format("Find by Id: %s", id));
         Currency localeCurrency = localeCurrencyResolver.getCurrency(locale);
