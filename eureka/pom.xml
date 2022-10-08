@@ -11,7 +11,7 @@
     <groupId>ru.mironovmike</groupId>
     <artifactId>eureka</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>eureka</name>
+    <name>Eureka</name>
     <description>Discovery service</description>
     <properties>
         <java.version>1.8</java.version>
@@ -22,7 +22,7 @@
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springapplication.ymlframework.boot</groupId>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>

@@ -13,3 +13,8 @@ server:
   port: 8888
 encrypt:
   key: 25XNpjOL1Hmy5nTr8eO81HhUJiEawiZ8 # or env variable
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

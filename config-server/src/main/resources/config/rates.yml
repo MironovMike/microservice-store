@@ -8,3 +8,5 @@ eureka:
     fetchRegistry: true
     serviceUrl:
       defaultZone: http://localhost:8070/eureka/
+rates:
+  out-of-service: true # Out of service imitate for CircuitBreaker testing

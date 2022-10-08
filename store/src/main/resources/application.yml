@@ -5,3 +5,11 @@ spring:
     import: configserver:http://localhost:8888
   profiles:
     active: dev
+resilience4j.circuitbreaker:
+  instances:
+    rates:
+      registerHealthIndicator: true
+      ringBufferSizeInClosedState: 5
+      ringBufferSizeInHalfOpenState: 3
+      waitDurationInOpenState: 10s
+      failureRateThreshold: 50

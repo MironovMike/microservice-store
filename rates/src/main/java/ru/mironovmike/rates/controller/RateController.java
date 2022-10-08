@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mironovmike.rates.service.RateService;
 
+import java.util.concurrent.TimeoutException;
+
 @RestController
 @RequestMapping(value = "v1/rate")
 @RequiredArgsConstructor
@@ -20,7 +22,7 @@ public class RateController {
     private final RateService rateService;
 
     @RequestMapping(value = "/{code}", method = RequestMethod.GET)
-    public ResponseEntity<Rate> getRate(@PathVariable("code") String code) {
+    public ResponseEntity<Rate> getRate(@PathVariable("code") String code) throws TimeoutException {
         return ResponseEntity.ok(rateService.getRate(code));
     }
 }

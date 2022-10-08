@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <groupId>ru.mironovmike</groupId>
-    <artifactId>rates</artifactId>
+    <artifactId>Rates</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>rates</name>
     <description>Currency rates module</description>
@@ -46,6 +46,11 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 

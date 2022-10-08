@@ -1,5 +1,6 @@
 package ru.mironovmike.store.exception;
 
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -8,9 +9,16 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler
-    public ResponseEntity<IncorrectData> handleException(NoSuchProductException exception) {
+    public ResponseEntity<IncorrectData> handleNoSuchProductException(NoSuchProductException exception) {
         IncorrectData data = new IncorrectData();
         data.setInfo(exception.getMessage());
         return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<IncorrectData> handleCallNotPermittedException(CallNotPermittedException exception) {
+        IncorrectData data = new IncorrectData();
+        data.setInfo(exception.getMessage());
+        return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
     }
 }

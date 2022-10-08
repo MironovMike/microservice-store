@@ -1,5 +1,6 @@
 package ru.mironovmike.store.service;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    @CircuitBreaker(name = "rates")
     public Product findById(long id, Locale locale) {
         log.info(String.format("Find by Id: %s", id));
         Currency localeCurrency = localeCurrencyResolver.getCurrency(locale);
