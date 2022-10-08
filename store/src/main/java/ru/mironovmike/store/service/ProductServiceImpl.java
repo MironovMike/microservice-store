@@ -47,7 +47,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    @CircuitBreaker(name = "rates")
+    @CircuitBreaker(name = "rates", fallbackMethod = "ratesFallbackMethod")
     public Product findById(long id, Locale locale) {
         log.info(String.format("Find by Id: %s", id));
         Currency localeCurrency = localeCurrencyResolver.getCurrency(locale);
@@ -75,5 +75,10 @@ public class ProductServiceImpl implements ProductService{
                     .build());
         }
         return product;
+    }
+
+    private Product ratesFallbackMethod(long id, Locale locale, Throwable r) {
+        MonetaryAmount monetaryAmount = MonetaryAmount.builder().price(0d).currency(Currency.getInstance("RUB")).build();
+        return Product.builder().monetaryAmount(monetaryAmount).weight(0f).title("Service temporary unavailable").build();
     }
 }
