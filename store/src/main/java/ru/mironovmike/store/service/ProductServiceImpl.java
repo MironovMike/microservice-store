@@ -29,7 +29,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ProductServiceImpl implements ProductService{
+public class ProductServiceImpl implements ProductService {
     @Autowired
     private final RestTemplate restTemplate;
 
@@ -57,16 +57,14 @@ public class ProductServiceImpl implements ProductService{
     public Product findById(long id, Locale locale) {
         log.info(String.format("Find by Id: %s", id));
         Currency localeCurrency = localeCurrencyResolver.getCurrency(locale);
-        Product product = repository
-                .findById(id)
-                .orElseThrow(()-> new NoSuchProductException(String.format("Product id %s not found", id)));
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new NoSuchProductException(String.format("Product id %s not found", id)));
         @NotNull Currency productCurrency = product.getMonetaryAmount().getCurrency();
         if (!productCurrency.getCurrencyCode().equals(localeCurrency.getCurrencyCode())) {
             // Need convert RUB price to locale currency
             // Request rate to rates-service
             log.info("Rates service request...");
-            ResponseEntity<Rate> responseRate = restTemplate.exchange("http://rates/v1/rate/{code}", HttpMethod.GET, null,
-                    Rate.class, localeCurrency.getCurrencyCode() + "-RUB");
+            ResponseEntity<Rate> responseRate = restTemplate.exchange("http://rates/v1/rate/{code}", HttpMethod.GET, null, Rate.class, localeCurrency.getCurrencyCode() + "-RUB");
 
             // Get rate from body response
             Optional<Rate> optional = Optional.ofNullable(responseRate.getBody());
@@ -84,7 +82,9 @@ public class ProductServiceImpl implements ProductService{
     }
 
     private Product ratesFallbackMethod(long id, Locale locale, Throwable r) {
-        MonetaryAmount monetaryAmount = MonetaryAmount.builder().price(0d).currency(Currency.getInstance("RUB")).build();
-        return Product.builder().monetaryAmount(monetaryAmount).weight(0f).title("Service temporary unavailable").build();
+        MonetaryAmount monetaryAmount = MonetaryAmount.builder()
+                .price(0d).currency(Currency.getInstance("RUB")).build();
+        return Product.builder().
+                monetaryAmount(monetaryAmount).weight(0f).title("Service temporary unavailable").build();
     }
 }
