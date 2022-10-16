@@ -6,7 +6,8 @@
 - *Rates* - сервис курса вылют.
 - *Config-server* - хранит конфигурации всех сервисов (Spring Cloud Config Server).
 - *Eureka-server* - discovery service.
-- *Gateway* - проксирует все запросы к сервисам. Добавляет в заголовок запроса уникальный id (если не задан). Добавляет его в заголовок ответа.
+- *Gateway* - проксирует все запросы к сервисам (используя Eureka-server для получения конечного адреса нужного сервиса). Добавляет в заголовок запроса уникальный id
+ (если не задан). Добавляет его в заголовок ответа.
 
 # Используемые технологии
 JPA (Hibernate), Spring Actuator, Hibernate Validation, Spring Web, Spring Cloud Config, Slf4j, Lombok, Spring Cloud
