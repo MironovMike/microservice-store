@@ -50,10 +50,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @CircuitBreaker(name = "rates", fallbackMethod = "ratesFallbackMethod")
-    @Bulkhead(name = "rates", fallbackMethod = "ratesFallbackMethod")
-    @Retry(name = "rates", fallbackMethod = "ratesFallbackMethod")
-    @RateLimiter(name = "rates", fallbackMethod = "ratesFallbackMethod")
+    @CircuitBreaker(name = "gateway", fallbackMethod = "ratesFallbackMethod")
+    @Bulkhead(name = "gateway", fallbackMethod = "ratesFallbackMethod")
+    @Retry(name = "gateway", fallbackMethod = "ratesFallbackMethod")
+    @RateLimiter(name = "gateway", fallbackMethod = "ratesFallbackMethod")
     public Product findById(long id, Locale locale) {
         log.info(String.format("Find by Id: %s", id));
         Currency localeCurrency = localeCurrencyResolver.getCurrency(locale);
@@ -64,7 +64,9 @@ public class ProductServiceImpl implements ProductService {
             // Need convert RUB price to locale currency
             // Request rate to rates-service
             log.info("Rates service request...");
-            ResponseEntity<Rate> responseRate = restTemplate.exchange("http://rates/v1/rate/{code}", HttpMethod.GET, null, Rate.class, localeCurrency.getCurrencyCode() + "-RUB");
+            ResponseEntity<Rate> responseRate = restTemplate.exchange("http://gateway/rates/v1/rate/{code}",
+                    HttpMethod.GET,
+                    null, Rate.class, localeCurrency.getCurrencyCode() + "-RUB");
 
             // Get rate from body response
             Optional<Rate> optional = Optional.ofNullable(responseRate.getBody());
