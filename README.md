@@ -6,6 +6,9 @@
 - *Rates* - сервис курса вылют.
 - *Config-server* - хранит конфигурации всех сервисов (Spring Cloud Config Server).
 - *Eureka-server* - discovery service.
+- *Gateway* - проксирует все запросы к сервисам. Добавляет в заголовок запроса уникальный id (если не задан). Добавляет его в заголовок ответа.
 
 # Используемые технологии
-JPA (Hibernate), Spring Actuator, Hibernate Validation, Spring Web, Spring Cloud Config, Slf4j, Lombok, Spring Cloud Load Balancer, Netflix Eureka, Eureka Discovery Client, Load Balanced Spring REST template, Resilience4j
+JPA (Hibernate), Spring Actuator, Hibernate Validation, Spring Web, Spring Cloud Config, Slf4j, Lombok, Spring Cloud
+ Load Balancer, Netflix Eureka, Eureka Discovery Client, Load Balanced Spring REST template, Resilience4j, Spring
+  Gateway.
