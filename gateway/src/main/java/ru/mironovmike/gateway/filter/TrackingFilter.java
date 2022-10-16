@@ -23,7 +23,7 @@ public class TrackingFilter implements GlobalFilter {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         HttpHeaders headers = exchange.getRequest().getHeaders();
         if (isRequestIdPresents(headers)) {
-            log.info(String.format("Request ID: %s", filterUtils.getRequestId(headers)));
+            log.info(String.format("Found request ID: %s", filterUtils.getRequestId(headers)));
 
         } else {
             String requestId = generateRequestId();
