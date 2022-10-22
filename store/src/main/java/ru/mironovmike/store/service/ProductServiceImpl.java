@@ -20,7 +20,6 @@ import ru.mironovmike.store.exception.RateRequestException;
 import ru.mironovmike.store.repository.ProductRepository;
 import ru.mironovmike.store.util.LocaleCurrencyResolver;
 import ru.mironovmike.store.util.MonetaryAmount;
-
 import javax.validation.constraints.NotNull;
 import java.util.Currency;
 import java.util.Locale;
@@ -50,10 +49,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @CircuitBreaker(name = "gateway", fallbackMethod = "ratesFallbackMethod")
-    @Bulkhead(name = "gateway", fallbackMethod = "ratesFallbackMethod")
-    @Retry(name = "gateway", fallbackMethod = "ratesFallbackMethod")
-    @RateLimiter(name = "gateway", fallbackMethod = "ratesFallbackMethod")
+    @CircuitBreaker(name = "gateway")
+    @Bulkhead(name = "gateway")
+    @Retry(name = "gateway")
+    @RateLimiter(name = "gateway")
     public Product findById(long id, Locale locale) {
         log.info(String.format("Find by Id: %s", id));
         Currency localeCurrency = localeCurrencyResolver.getCurrency(locale);

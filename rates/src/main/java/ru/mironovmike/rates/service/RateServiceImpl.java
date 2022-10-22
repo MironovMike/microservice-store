@@ -34,7 +34,7 @@ public class RateServiceImpl implements RateService {
     private void makeOutOfService() throws TimeoutException {
         try {
             Thread.sleep(2000);
-            throw new TimeoutException();
+            throw new TimeoutException("Can't get rate. Try later.");
         } catch (InterruptedException e) {
             log.error(e.getMessage());
         }

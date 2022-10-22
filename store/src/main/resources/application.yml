@@ -7,7 +7,7 @@ spring:
     active: dev
 resilience4j.circuitbreaker:
   instances:
-    rates:
+    gateway:
       registerHealthIndicator: true
       ringBufferSizeInClosedState: 5
       ringBufferSizeInHalfOpenState: 3
@@ -16,20 +16,20 @@ resilience4j.circuitbreaker:
 
 resilience4j.bulkhead:
   instances:
-    bulkheadLicenseService:
+    gateway:
       maxWaitDuration: 2ms
       maxConcurrentCalls: 20
 
 resilience4j.thread-pool-bulkhead:
   instances:
-    bulkheadLicenseService:
+    gateway:
       maxThreadPoolSize: 1
       coreThreadPoolSize: 1
       queueCapacity: 1
 
 resilience4j.retry:
   instances:
-    retryLicenseService:
+    gateway:
       maxRetryAttempts: 5
       waitDuration: 10000
       retry-exceptions:
@@ -37,7 +37,7 @@ resilience4j.retry:
 
 resilience4j.ratelimiter:
   instances:
-    licenseService:
+    gateway:
       limitForPeriod: 5
       limitRefreshPeriod: 5000
       timeoutDuration: 1000ms
