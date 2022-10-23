@@ -9,4 +9,13 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8070/eureka/
 rates:
-  out-of-service: true # Out of service imitate for CircuitBreaker testing
+  out-of-service: false # Out of service imitate for CircuitBreaker testing
+keycloak:
+  realm: store-realm # Keycloak realm name
+  auth-server-url: http://keycloak:8080/auth
+  ssl-required: external
+  resource: store # Keycloak client id
+  credentials:
+    secret: eUje5U671G3v1fKduCc8pVGUH05iQMuY # Study purpose
+  use-resource-role-mappings: true
+  bearer-only: true

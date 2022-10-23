@@ -12,4 +12,4 @@
 # Используемые технологии
 JPA (Hibernate), Spring Actuator, Hibernate Validation, Spring Web, Spring Cloud Config, Slf4j, Lombok, Spring Cloud
  Load Balancer, Netflix Eureka, Eureka Discovery Client, Load Balanced Spring REST template, Resilience4j, Spring
-  Gateway.
+  Gateway, Keycloak.

@@ -12,6 +12,18 @@ services:
       - '3306:3306'
     volumes:
       - mysql-db:/var/lib/mysql
+  keycloak:
+    image: jboss/keycloak
+    restart: always
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin # for study purpose
+    ports:
+    - "8080:8080"
+    networks:
+      backend:
+        aliases:
+          - "keycloak"
 #  config-server:
 #    image: config-server:0.0.1-SNAPSHOT
 #    ports:
