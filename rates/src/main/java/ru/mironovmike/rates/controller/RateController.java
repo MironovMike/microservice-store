@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import ru.mironovmike.rates.service.RateService;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.concurrent.TimeoutException;
 
 @RestController
@@ -21,6 +22,7 @@ public class RateController {
     @Autowired
     private final RateService rateService;
 
+    @RolesAllowed({ "ADMIN", "USER" })
     @RequestMapping(value = "/{code}", method = RequestMethod.GET)
     public ResponseEntity<Rate> getRate(@PathVariable("code") String code) throws TimeoutException {
         return ResponseEntity.ok(rateService.getRate(code));
