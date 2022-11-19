@@ -7,6 +7,8 @@
 - *Config-server* - хранит конфигурации всех сервисов (Spring Cloud Config Server).
 - *Eureka-server* - discovery service.
 - *Gateway* - проксирует все запросы к сервисам (используя Eureka-server для получения конечного адреса нужного сервиса). Добавляет в заголовок запроса уникальный request-id (если запрос поступил без него).
+- *Keycloak* - менеджер прав пользователей. Хранит пользователей их роли. Генерирует и производит валидацию JTW-токенов.
+- *Mysql* - база данных товаров.
 
 # Используемые технологии
 JPA (Hibernate), Spring Actuator, Hibernate Validation, Spring Web, Spring Cloud Config, Slf4j, Lombok, Spring Cloud
