@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.mironovmike.store.entity.Product;
 import ru.mironovmike.store.service.ProductService;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.Locale;
 
 @RestController
@@ -19,6 +20,7 @@ public class ProductController {
     private final ProductService productService;
 
     @RequestMapping(value = "/{productId}", method = RequestMethod.GET)
+    @RolesAllowed({ "ADMIN", "USER" })
     public ResponseEntity<Product> getProduct(@PathVariable("productId") long productId,
                                               @RequestHeader(value = "Accept-Language", required = false) Locale locale) {
         return ResponseEntity.ok(productService.findById(productId, locale));
