@@ -21,6 +21,6 @@ keycloak:
   ssl-required: external
   resource: store # Keycloak client id
   credentials:
-    secret: MOISFnTBVrG5ZtprmnEldRLc8ul7Cu2e # Study purpose
+    secret: oepcfper7NJAlGUqVovCtVXbteDGOJQ0 # Study purpose
   use-resource-role-mappings: true
   bearer-only: true

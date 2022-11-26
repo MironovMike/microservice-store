@@ -18,8 +18,11 @@ services:
     environment:
       KEYCLOAK_USER: administrator
       KEYCLOAK_PASSWORD: admin # for study purpose
+      KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/realm-export.json -Dkeycloak.profile.feature.upload_scripts=enabled
     ports:
     - "8080:8080"
+    volumes:
+    - ./imports:/opt/jboss/keycloak/imports
     networks:
       backend:
         aliases:
