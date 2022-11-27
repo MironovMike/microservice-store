@@ -27,3 +27,11 @@
 JPA (Hibernate), Spring Actuator, Hibernate Validation, Spring Web, Spring Cloud Config, Spring Cloud Stream, Slf4j, Lombok, Spring Cloud
  Load Balancer, Netflix Eureka, Eureka Discovery Client, Load Balanced Spring REST template, Resilience4j, Spring
   Gateway, Keycloak, JWT, Redis, Kafka.
+  
+# Установка
+
+1. В `C:\Windows\System32\drivers\etc\hosts` добавить:
+```
+127.0.0.1 keycloak
+127.0.0.1 kafka
+```

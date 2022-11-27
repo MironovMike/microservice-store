@@ -7,6 +7,11 @@ spring:
   sql:
     init:
       mode: always
+  cloud:
+    stream:
+      bindings:
+        input-in-0:
+          destination: rates
 eureka:
   instance:
     preferIpAddress: true
@@ -21,6 +26,6 @@ keycloak:
   ssl-required: external
   resource: store # Keycloak client id
   credentials:
-    secret: oepcfper7NJAlGUqVovCtVXbteDGOJQ0 # Study purpose
+    secret: ZZG9y0QdIcw75zQuyvzRcmOkkN0KqoJ9 # Study purpose
   use-resource-role-mappings: true
   bearer-only: true
