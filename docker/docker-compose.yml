@@ -12,10 +12,35 @@ services:
       - '3306:3306'
     volumes:
       - mysql-db:/var/lib/mysql
+    networks:
+      backend:
+        aliases:
+          - "db"
+  keycloak-db:
+    image: mysql:8.0
+    volumes:
+      - keycloak_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: keycloak
+      MYSQL_USER: keycloak
+      MYSQL_PASSWORD: password
+    ports:
+      - '3307:3307'
+    networks:
+      backend:
+        aliases:
+          - "keycloak-db"
+
   keycloak:
     image: jboss/keycloak
     restart: always
     environment:
+      DB_VENDOR: MYSQL
+      DB_ADDR: keycloak-db
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_PASSWORD: password
       KEYCLOAK_USER: administrator
       KEYCLOAK_PASSWORD: admin # for study purpose
       KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/realm-export.json -Dkeycloak.profile.feature.upload_scripts=enabled
@@ -23,6 +48,8 @@ services:
     - "8080:8080"
     volumes:
     - ./imports:/opt/jboss/keycloak/imports
+    depends_on:
+      - keycloak-db
     networks:
       backend:
         aliases:
@@ -72,6 +99,7 @@ services:
 #          - "config-server"
 volumes:
   mysql-db:
+  keycloak_data:
 networks:
   backend:
     driver: bridge
