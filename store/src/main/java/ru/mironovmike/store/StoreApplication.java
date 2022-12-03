@@ -12,10 +12,14 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import ru.mironovmike.store.config.ServiceConfig;
 import ru.mironovmike.store.util.UserContextInterceptor;
 
 import java.util.Collections;
@@ -27,6 +31,9 @@ import java.util.Locale;
 @RequiredArgsConstructor
 @ComponentScan(basePackageClasses = {StoreApplication.class, KeycloakSecurityComponents.class})
 public class StoreApplication {
+	@Autowired
+	private final ServiceConfig serviceConfig;
+
 	public static void main(String[] args) {
 		SpringApplication.run(StoreApplication.class, args);
 	}
@@ -63,5 +70,20 @@ public class StoreApplication {
 			restTemplate.setInterceptors(interceptors);
 		}
 		return restTemplate;
+	}
+
+	@Bean
+	JedisConnectionFactory jedisConnectionFactory() {
+		String redisServer = serviceConfig.getRedisServer();
+		int redisPort = Integer.parseInt(serviceConfig.getRedisPort());
+		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(redisServer, redisPort);
+		return new JedisConnectionFactory(configuration);
+	}
+
+	@Bean
+	public RedisTemplate<String, Object> redisTemplate() {
+		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+		redisTemplate.setConnectionFactory(jedisConnectionFactory());
+		return redisTemplate;
 	}
 }

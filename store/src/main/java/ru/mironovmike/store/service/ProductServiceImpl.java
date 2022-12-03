@@ -18,6 +18,7 @@ import ru.mironovmike.store.entity.Rate;
 import ru.mironovmike.store.exception.NoSuchProductException;
 import ru.mironovmike.store.exception.RateRequestException;
 import ru.mironovmike.store.repository.ProductRepository;
+import ru.mironovmike.store.repository.RatesRedisRepository;
 import ru.mironovmike.store.util.LocaleCurrencyResolver;
 import ru.mironovmike.store.util.MonetaryAmount;
 import javax.validation.constraints.NotNull;
@@ -31,6 +32,9 @@ import java.util.Optional;
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private final RestTemplate restTemplate;
+
+    @Autowired
+    private final CacheService cacheService;
 
     @Autowired
     private final ProductRepository repository;
@@ -60,17 +64,30 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new NoSuchProductException(String.format("Product id %s not found", id)));
         @NotNull Currency productCurrency = product.getMonetaryAmount().getCurrency();
         if (!productCurrency.getCurrencyCode().equals(localeCurrency.getCurrencyCode())) {
+            Rate rate;
             // Need convert RUB price to locale currency
-            // Request rate to rates-service
-            log.info("Rates service request...");
-            ResponseEntity<Rate> responseRate = restTemplate.exchange("http://gateway/rates/v1/rate/{code}",
-                    HttpMethod.GET,
-                    null, Rate.class, localeCurrency.getCurrencyCode() + "-RUB");
+            // Check redis cache
+            log.info("Checking cache exist...");
+            Rate cacheRate = cacheService.getById(localeCurrency.getCurrencyCode() + "-RUB");
+            if (cacheRate == null) {
+                log.info("No valid cache...");
+                // Request rate to rates-service
+                log.info("Rates service request...");
+                ResponseEntity<Rate> responseRate = restTemplate.exchange("http://gateway/rates/v1/rate/{code}",
+                        HttpMethod.GET,
+                        null, Rate.class, localeCurrency.getCurrencyCode() + "-RUB");
 
-            // Get rate from body response
-            Optional<Rate> optional = Optional.ofNullable(responseRate.getBody());
-            Rate rate = optional.orElseThrow(() -> new RateRequestException("Rates service null response"));
-            log.info(String.format("...got response rate: %s", rate.toString()));
+                // Get rate from body response
+                Optional<Rate> optional = Optional.ofNullable(responseRate.getBody());
+                rate = optional.orElseThrow(() -> new RateRequestException("Rates service null response"));
+                rate.setId(localeCurrency.getCurrencyCode() + "-RUB");
+                log.info(String.format("...got response rate: %s", rate.toString()));
+                log.info("Caching response...");
+                cacheService.save(rate);
+            } else {
+                log.info("Cache found");
+                rate = cacheRate;
+            }
 
             // Calculate price
             double price = product.getMonetaryAmount().getPrice() / rate.getRate();
