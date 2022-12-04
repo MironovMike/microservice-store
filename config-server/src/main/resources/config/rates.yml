@@ -24,4 +24,6 @@ spring:
     stream:
       bindings:
         output-out-0:
-          destination: rates
+          destination: "rates"
+zipkin:
+  baseUrl: zipkin:9411

@@ -5,6 +5,9 @@ spring:
     import: configserver:http://localhost:8888
   profiles:
     active: dev
+  sleuth:
+    sampler:
+      probability: 1
 resilience4j.circuitbreaker:
   instances:
     gateway:

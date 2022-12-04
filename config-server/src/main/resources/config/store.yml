@@ -11,7 +11,7 @@ spring:
     stream:
       bindings:
         input-in-0:
-          destination: rates
+          destination: "rates"
 eureka:
   instance:
     preferIpAddress: true

@@ -41,8 +41,8 @@ services:
       DB_DATABASE: keycloak
       DB_USER: keycloak
       DB_PASSWORD: password
-      KEYCLOAK_USER: administrator
-      KEYCLOAK_PASSWORD: admin # for study purpose
+      #KEYCLOAK_USER: administrator
+      #KEYCLOAK_PASSWORD: admin # for study purpose
       KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/realm-export.json -Dkeycloak.profile.feature.upload_scripts=enabled
     ports:
     - "8080:8080"
@@ -70,7 +70,7 @@ services:
       - KAFKA_ADVERTISED_HOST_NAME=kafka
       - KAFKA_ADVERTISED_PORT=9092
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_CREATE_TOPICS=rates:1:1
+      - KAFKA_CREATE_TOPICS= "rates:1:1"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     depends_on:
@@ -132,6 +132,20 @@ services:
       backend:
         aliases:
           - "logstash"
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    depends_on:
+      - elasticsearch
+    environment:
+      - STORAGE_TYPE=elasticsearch
+      - "ES_HOSTS=elasticsearch:9300"
+    ports:
+      - "9411:9411"
+    networks:
+      backend:
+        aliases:
+          - "zipkin"
 #  config-server:
 #    image: config-server:0.0.1-SNAPSHOT
 #    ports:
