@@ -89,6 +89,11 @@
 			<artifactId>jedis</artifactId>
 			<type>jar</type>
 		</dependency>
+		<dependency>
+			<groupId>net.logstash.logback</groupId>
+			<artifactId>logstash-logback-encoder</artifactId>
+			<version>7.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>

@@ -32,3 +32,6 @@ keycloak:
 redis:
   server: redis
   port: 6379
+logging:
+  level:
+    ru.mironovmike: debug

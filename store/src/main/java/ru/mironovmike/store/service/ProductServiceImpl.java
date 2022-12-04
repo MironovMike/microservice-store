@@ -6,6 +6,8 @@ import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
@@ -42,6 +44,8 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private final LocaleCurrencyResolver localeCurrencyResolver;
 
+    private static final Logger logger = LoggerFactory.getLogger(ProductService.class);
+
     @Qualifier("messageSource")
     @Autowired
     MessageSource messages;
@@ -67,12 +71,12 @@ public class ProductServiceImpl implements ProductService {
             Rate rate;
             // Need convert RUB price to locale currency
             // Check redis cache
-            log.info("Checking cache exist...");
+            logger.debug("Checking cache exist...");
             Rate cacheRate = cacheService.getById(localeCurrency.getCurrencyCode() + "-RUB");
             if (cacheRate == null) {
-                log.info("No valid cache...");
+                logger.debug("No valid cache...");
                 // Request rate to rates-service
-                log.info("Rates service request...");
+                logger.debug("Rates service request...");
                 ResponseEntity<Rate> responseRate = restTemplate.exchange("http://gateway/rates/v1/rate/{code}",
                         HttpMethod.GET,
                         null, Rate.class, localeCurrency.getCurrencyCode() + "-RUB");
@@ -81,11 +85,11 @@ public class ProductServiceImpl implements ProductService {
                 Optional<Rate> optional = Optional.ofNullable(responseRate.getBody());
                 rate = optional.orElseThrow(() -> new RateRequestException("Rates service null response"));
                 rate.setId(localeCurrency.getCurrencyCode() + "-RUB");
-                log.info(String.format("...got response rate: %s", rate.toString()));
-                log.info("Caching response...");
+                logger.debug(String.format("...got response rate: %s", rate.toString()));
+                logger.debug("Caching response...");
                 cacheService.save(rate);
             } else {
-                log.info("Cache found");
+                logger.debug("Cache found");
                 rate = cacheRate;
             }
 

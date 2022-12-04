@@ -1,10 +1,10 @@
 # Общее описание
 Проект магазина товаров, предназначенный для изучения различных технологий Java.
 
-Сервис *Store* возвращает цену товара в разной валюте. Для этого нам потребуется десять микросервисов.
+Сервис *Store* возвращает цену товара в разной валюте. Для этого нам потребуется 14 микросервисов.
 
 # Список сервисов
-- *Store* - реализует API для внешних клиентов. Хранит товары, их свойства и цену в рублях. В зависимости от локали пользователя (определяет по заголовку Accept-Language) возвращает товар в рублях или, используя сервис *Rates*, в другой валюте.
+- *Store* - реализует API для внешних клиентов. Доступ через сервис *Gateway*. Хранит товары, их свойства и цену в рублях. В зависимости от локали пользователя (определяет по заголовку Accept-Language) возвращает товар в рублях или, используя сервис *Rates*, в другой валюте.
 
     При этом Resilience4j реализует защиту от медленной работы сервиса *Rates* (`@CircuitBreaker`), а также следующие средства повышения стабильности работы и защиты: `@Bulkhead,  @RateLimiter, @Retry`.
     
@@ -12,7 +12,9 @@
     
     *Store* ретранслирует заголовки `JWT` и `request-id` во все свои подзапросы. В дальнейшем по `request-id` можно отследить все дочерние запросы сервисов, тем самым связав их к конкретному запросу клиента приложения.
     
-    Полученные курсы валют кешируется в *Redis*. Для инвалидации кеша у *Rates* есть соответствующий endpoint, при поступлении запроса на который, *Rate* постит сообщение в Kafka. Соответствующий топик прослушивается *Store*, который инвалидирует кеш при получении сообщения.
+    Полученные курсы валют кешируется в *Redis*. Для инвалидации кеша у *Rates* есть соответствующий endpoint, при поступлении запроса на который, *Rates* постит сообщение в Kafka. Соответствующий топик прослушивается *Store*, который инвалидирует кеш при получении сообщения.
+    
+    Сбор логов осуществляется в централизованное хранилище через ELK-стек.
     
 - *Rates* - сервис курса вылют. Доступ реализован по `JWT` (который также можно получить у *Keycloak*).
 - *Config-server* - хранит конфигурации всех сервисов (Spring Cloud Config Server).
@@ -23,12 +25,13 @@
 - *Keycloak Mysql* - база данных пользователей Keycloak.
 - *Redis* - кеширует курсы валют, полученные от *Rates*.
 - *Kafka* - брокер сообщений. При изменении курса валют *Rates* постит сообщение об этом для *Store*. При наступлении этого события, *Store* очищает кеш, хранимый в *Redis*. Реализация на Spring Cloud Stream.
-- *Zookeeper* - зависимость *Kafka*. Активно используется *Kafka* для организации своей распределенной системы. 
+- *Zookeeper* - зависимость *Kafka*. Активно используется *Kafka* для организации своей распределенной системы.
+- *Logstash* - для централизованной сборки логов у сервисов.
+- *Elasticsearch* - для хранения логов.
+- *Kibana* - для визуализации логов.
 
 # Используемые технологии
-JPA (Hibernate), Spring Actuator, Hibernate Validation, Spring Web, Spring Cloud Config, Spring Cloud Stream, Slf4j, Lombok, Spring Cloud
- Load Balancer, Netflix Eureka, Eureka Discovery Client, Load Balanced Spring REST template, Resilience4j, Spring
-  Gateway, Keycloak, JWT, Redis, Kafka.
+JPA (Hibernate), Spring Actuator, Hibernate Validation, Spring Web, Spring Cloud Config, Spring Cloud Stream, Slf4j, Lombok, Spring Cloud Load Balancer, Netflix Eureka, Eureka Discovery Client, Load Balanced Spring REST template, Resilience4j, Spring Gateway, Keycloak, JWT, Redis, Kafka, Logstash, Elasticsearch, Kibana, Zipkin.
   
 # Установка
 
@@ -37,4 +40,7 @@ JPA (Hibernate), Spring Actuator, Hibernate Validation, Spring Web, Spring Cloud
 127.0.0.1 keycloak
 127.0.0.1 kafka
 127.0.0.1 redis
+127.0.0.1 logstash
+127.0.0.1 kibana
+127.0.0.1 elasticsearch
 ```
